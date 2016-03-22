@@ -18,6 +18,7 @@ public class StartedServiceActivity extends AppCompatActivity {
     private TextView messageTextView;
     private StartedServiceBroadcastReceiver startedServiceBroadcastReceiver;
     private IntentFilter startedServiceIntentFilter;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +29,23 @@ public class StartedServiceActivity extends AppCompatActivity {
 
         messageTextView = (TextView)findViewById(R.id.message_text_view);
 
+
         // TODO: exercise 7a - create an instance of the StartedServiceBroadcastReceiver
+        startedServiceBroadcastReceiver = new StartedServiceBroadcastReceiver(messageTextView);
 
         // TODO: exercise 7b - create an instance of the IntentFilter
         // with the corresponding actions of the broadcast intents
+        startedServiceIntentFilter = new IntentFilter();
+        startedServiceIntentFilter.addAction(Constants.ACTION_STRING);
+        startedServiceIntentFilter = new IntentFilter();
+        startedServiceIntentFilter.addAction(Constants.ACTION_INTEGER);
+        startedServiceIntentFilter = new IntentFilter();
+        startedServiceIntentFilter.addAction(Constants.ACTION_ARRAY_LIST);
 
         // TODO: exercise 7d - start the service
+        intent = new Intent();
+        intent.setComponent(new ComponentName("ro.pub.cs.systems.eim.lab05.startedservice", "ro.pub.cs.systems.eim.lab05.startedservice.service.StartedService"));
+        startService(intent);
     }
 
     @Override
@@ -41,19 +53,20 @@ public class StartedServiceActivity extends AppCompatActivity {
         super.onResume();
 
         // TODO: exercise 7c - register the broadcast receiver for the intent filter actions
+        registerReceiver(startedServiceBroadcastReceiver, startedServiceIntentFilter);
     }
 
     @Override
     protected void onPause() {
         // TODO: exercise 7c - unregister the broadcast receiver
-
+        unregisterReceiver(startedServiceBroadcastReceiver);
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         // TODO: exercise 7d - stop the service
-
+        stopService(intent);
         super.onDestroy();
     }
 
